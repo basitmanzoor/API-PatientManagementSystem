@@ -2,7 +2,9 @@ package com.example.HPManagement;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.*;
 
 @RestController
 public class PatientController {
@@ -31,6 +33,39 @@ public class PatientController {
         Patient patient = hm.get(patientId);
 
         return patient;
+    }
+
+    @GetMapping("/getAllPatients")
+    public List<Patient> getAllPatients(){
+        List<Patient> patients = new ArrayList<>();
+
+        for(Patient p : hm.values()){
+            patients.add(p);
+        }
+        return patients;
+    }
+
+    @GetMapping("/getPatientByName")
+    public Patient getPatientByName(@RequestParam("name") String name){
+        for(Patient p: hm.values()){
+            if(p.getName().equals(name)){
+                return p;
+            }
+        }
+        return null;
+    }
+
+    @GetMapping("/getPatientsGreaterThanAge")
+    public List<Patient> getPatientsGreaterThanAge(@RequestParam("age") Integer age){
+
+        List<Patient> patients = new ArrayList<>();
+
+        for(Patient p: hm.values()){
+            if(p.getAge() > age){
+                patients.add(p);
+            }
+        }
+        return patients;
     }
 
 
