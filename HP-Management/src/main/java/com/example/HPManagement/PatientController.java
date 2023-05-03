@@ -67,6 +67,51 @@ public class PatientController {
         }
         return patients;
     }
+    @GetMapping("/getAgeAndDisease")
+    public List<Patient> getAgeAndDisease(@RequestParam("age") Integer age, @RequestParam("disease") String disease){
+        List<Patient> patients = new ArrayList<>();
 
+        for(Patient p: hm.values()){
+            if(p.getAge() > age && p.getDisease().equals(disease)){
+                patients.add(p);
+            }
+        }
+        return patients;
+    }
+    //we use PUT for update
+    @PutMapping("/updatePatientDetails")
+    public String updatePatientDetails(@RequestBody Patient patient) {
+        int key = patient.getPatientId();
+
+        if(hm.containsKey(key)) {
+            hm.put(key, patient);
+            return "Patient details updated successfully";
+        }
+        else{
+            return "Data was not updated";
+        }
+    }
+
+    //if we only want to update one parameter of patient
+    @PutMapping("/updateDisease")
+    public String updateDisease(@RequestParam("patientId") Integer patientId, @RequestParam("disease") String disease){
+        if(hm.containsKey(patientId)){
+            Patient patient = hm.get(patientId);
+            patient.setDisease(disease);
+            hm.put(patientId, patient);
+            return "disease successfully updated";
+        }
+        else{
+            return "patient does not exist";
+        }
+    }
+
+    //delete patient using DELETE
+    @DeleteMapping("/deletePatient")
+    public String deletePatient(@RequestParam("patientId") Integer patientId){
+        hm.remove(patientId);
+
+        return "Patient deleted successfully";
+    }
 
 }
